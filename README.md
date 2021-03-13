@@ -1,1 +1,3 @@
-### Spring Cloud 2.4 example project
+### Spring Cloud example project
+
+Developed on Spring boot 2.4
