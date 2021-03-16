@@ -20,6 +20,7 @@
         <module>users-api</module>
         <module>account-management</module>
         <module>gateway-api</module>
+        <module>app-config-server</module>
     </modules>
 
     <properties>

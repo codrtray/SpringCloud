@@ -1,5 +1,6 @@
 package com.dmi.cloud2;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +55,12 @@ public class AuthorizationHeaderFilter extends
     private boolean isJwtValid(String jwt) {
         String subject;
         try {
-            subject = Jwts.parser()
+            Claims claims = Jwts.parser()
                     .setSigningKey(env.getProperty("token.secret"))
                     .parseClaimsJws(jwt)
-                    .getBody()
+                    .getBody();
+            log.info("Expiration time is {}", claims.getExpiration());
+            subject = claims
                     .getSubject();
         } catch (Exception e) {
             log.error("An error happened by parse token");
