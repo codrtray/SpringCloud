@@ -1,5 +1,6 @@
 package com.dmi.cloud2;
 
+import com.dmi.cloud2.controller.FeignErrorDecoder;
 import feign.Logger;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -51,4 +52,8 @@ public class UsersApiApplication {
         return Logger.Level.FULL;
     }
 
+    @Bean
+    public FeignErrorDecoder feignErrorDecoder() {
+        return new FeignErrorDecoder();
+    }
 }
