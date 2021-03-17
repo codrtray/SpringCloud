@@ -1,5 +1,6 @@
 package com.dmi.cloud2.service;
 
+import com.dmi.cloud2.controller.AlbumsServiceClient;
 import com.dmi.cloud2.data.UserEntity;
 import com.dmi.cloud2.model.AlbumResponseModel;
 import com.dmi.cloud2.model.UserDto;
@@ -29,14 +30,16 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RestTemplate restTemplate;
     private final Environment env;
+    private final AlbumsServiceClient albumsServiceClient;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder, RestTemplate restTemplate, Environment env) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder, RestTemplate restTemplate, Environment env, AlbumsServiceClient albumsServiceClient) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.restTemplate = restTemplate;
         this.env = env;
+        this.albumsServiceClient = albumsServiceClient;
     }
 
     @Override
@@ -65,13 +68,13 @@ public class UserServiceImpl implements UserService {
         }
         UserDto userDto = modelMapper.map(byUserId, UserDto.class);
 
-        String albumsUrl = String.format(Objects.requireNonNull(env.getProperty("albums.url")), userId);
+//        String albumsUrl = String.format(Objects.requireNonNull(env.getProperty("albums.url")), userId);
+//        ResponseEntity<List<AlbumResponseModel>> albumResponse = restTemplate.exchange(albumsUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
+//        });
+//        List<AlbumResponseModel> albums = albumResponse.getBody();
 
-        ResponseEntity<List<AlbumResponseModel>> albumResponse = restTemplate.exchange(albumsUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
-        });
-
-        List<AlbumResponseModel> albumsList = albumResponse.getBody();
-        userDto.setAlbumResponseModels(albumsList);
+        List<AlbumResponseModel> albums = albumsServiceClient.getAlbums(userId);
+        userDto.setAlbumResponseModels(albums);
         return userDto;
     }
 
