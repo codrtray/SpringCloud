@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.Value;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter @Setter
 public class UserDto implements Serializable {
@@ -18,4 +19,5 @@ public class UserDto implements Serializable {
     private String email;
     private String userId;
     private String encryptedPassword;
+    private List<AlbumResponseModel> albumResponseModels;
 }

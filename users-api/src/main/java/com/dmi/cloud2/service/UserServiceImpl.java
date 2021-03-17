@@ -1,17 +1,25 @@
 package com.dmi.cloud2.service;
 
 import com.dmi.cloud2.data.UserEntity;
+import com.dmi.cloud2.model.AlbumResponseModel;
 import com.dmi.cloud2.model.UserDto;
 import com.dmi.cloud2.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -19,12 +27,16 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final RestTemplate restTemplate;
+    private final Environment env;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder, RestTemplate restTemplate, Environment env) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.restTemplate = restTemplate;
+        this.env = env;
     }
 
     @Override
@@ -43,6 +55,24 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException(email);
         }
         return modelMapper.map(userEntity, UserDto.class);
+    }
+
+    @Override
+    public UserDto getUserByUserId(String userId) {
+        UserEntity byUserId = userRepository.findByUserId(userId);
+        if (byUserId == null) {
+            throw new UsernameNotFoundException(userId);
+        }
+        UserDto userDto = modelMapper.map(byUserId, UserDto.class);
+
+        String albumsUrl = String.format(Objects.requireNonNull(env.getProperty("albums.url")), userId);
+
+        ResponseEntity<List<AlbumResponseModel>> albumResponse = restTemplate.exchange(albumsUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
+        });
+
+        List<AlbumResponseModel> albumsList = albumResponse.getBody();
+        userDto.setAlbumResponseModels(albumsList);
+        return userDto;
     }
 
     @Override

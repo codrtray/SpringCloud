@@ -21,6 +21,7 @@
         <module>account-management</module>
         <module>gateway-api</module>
         <module>app-config-server</module>
+        <module>photo-app-api-albums</module>
     </modules>
 
     <properties>

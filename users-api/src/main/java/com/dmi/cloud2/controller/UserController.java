@@ -1,8 +1,9 @@
-package com.dmi.cloud2.controllers;
+package com.dmi.cloud2.controller;
 
 import com.dmi.cloud2.model.CreateUserRequestModel;
 import com.dmi.cloud2.model.CreateUserResponseModel;
 import com.dmi.cloud2.model.UserDto;
+import com.dmi.cloud2.model.UserResponseModel;
 import com.dmi.cloud2.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,4 +44,13 @@ public class UserController {
         CreateUserResponseModel createUserResponseModel = modelMapper.map(createdUser, CreateUserResponseModel.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponseModel);
     }
+
+    @GetMapping(value = "/{userId}",
+    produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<UserResponseModel> getUser(@PathVariable String userId) {
+        UserDto userByUserId = userService.getUserByUserId(userId);
+        UserResponseModel returnValue = modelMapper.map(userByUserId, UserResponseModel.class);
+        return ResponseEntity.status(HttpStatus.OK).body(returnValue);
+    }
+
 }
