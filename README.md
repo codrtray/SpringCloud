@@ -5,6 +5,9 @@ Developed on Spring boot 2.4
 
 #### Requests
 
+        POST http://localhost:8012/decrypt
+        POST http://localhost:8012/encrypt
+        
         GET http://localhost:8012/AppConfigServer/native
         POST http://localhost:8012/actuator/busrefresh
         GET http://localhost:8012/actuator
