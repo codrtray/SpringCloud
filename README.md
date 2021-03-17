@@ -28,3 +28,10 @@ Developed on Spring boot 2.4
         
         GET http://localhost:8082/users-ws/users/status/check
         Authorization: Bearer <token>
+        
+        
+#### Asymmetric encryption
+
+        keytool -genkeypair -alias apiEncryptionKey -keyalg RSA \
+        -dname "CN=Random Surname,OU=API Development,O=sk101.netlify.app,L=BT,S=MA,C=USA" \
+        -keypass 1q2w3e4r -keystore apiEncryptionKey.jks -storepass 1q2w3e4r
