@@ -5,6 +5,7 @@ import com.dmi.cloud2.data.UserEntity;
 import com.dmi.cloud2.model.AlbumResponseModel;
 import com.dmi.cloud2.model.UserDto;
 import com.dmi.cloud2.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -24,6 +25,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
@@ -73,6 +75,7 @@ public class UserServiceImpl implements UserService {
 //        });
 //        List<AlbumResponseModel> albums = albumResponse.getBody();
 
+        log.info("Before calling albums Microservice");
         List<AlbumResponseModel> albums = albumsServiceClient.getAlbums(userId);
         userDto.setAlbumResponseModels(albums);
         return userDto;
