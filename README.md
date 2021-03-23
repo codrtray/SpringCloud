@@ -30,7 +30,7 @@ Developed on Spring boot 2.4
         Authorization: Bearer <token>
         
         
-#### Asymmetric encryption
+#### Assymmetric encryption
 
         keytool -genkeypair -alias apiEncryptionKey -keyalg RSA \
         -dname "CN=Random Surname,OU=API Development,O=sk101.netlify.app,L=BT,S=MA,C=USA" \
